@@ -1,0 +1,46 @@
+{
+  "company": {
+    "name": "Acme Corp",
+    "departments": [
+      {
+        "name": "Engineering",
+        "head": {
+          "name": "Frank",
+          "contact": {
+            "email": "frank@acme.com",
+            "phone": "+1-555-0100"
+          }
+        },
+        "teams": [
+          {
+            "name": "Backend",
+            "members": ["Alice", "Bob"],
+            "stack": {
+              "languages": ["python", "go"],
+              "databases": ["postgres", "redis"]
+            }
+          },
+          {
+            "name": "Frontend",
+            "members": ["Carol"],
+            "stack": {
+              "languages": ["typescript"],
+              "databases": []
+            }
+          }
+        ]
+      },
+      {
+        "name": "Marketing",
+        "head": {
+          "name": "Grace",
+          "contact": {
+            "email": "grace@acme.com",
+            "phone": null
+          }
+        },
+        "teams": []
+      }
+    ]
+  }
+}

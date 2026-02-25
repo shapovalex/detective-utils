@@ -1,0 +1,8 @@
+{
+  "name": "Alice",
+  "age": 30,
+  "email": "alice@example.com",
+  "active": true,
+  "score": 98.6,
+  "nickname": null
+}

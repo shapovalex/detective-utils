@@ -1,0 +1,12 @@
+{
+  "normal_key": "value",
+  "key with spaces": "value2",
+  "key-with-dashes": "value3",
+  "key.with.dots": "value4",
+  "123numeric": "value5",
+  "nested": {
+    "another key": {
+      "deep value": 42
+    }
+  }
+}

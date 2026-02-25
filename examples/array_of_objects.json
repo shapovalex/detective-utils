@@ -1,0 +1,22 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Carol",
+      "role": "engineer",
+      "skills": ["python", "go"]
+    },
+    {
+      "id": 2,
+      "name": "Dave",
+      "role": "designer",
+      "skills": ["figma", "css"]
+    },
+    {
+      "id": 3,
+      "name": "Eve",
+      "role": "manager",
+      "skills": []
+    }
+  ]
+}

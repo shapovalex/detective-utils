@@ -1,0 +1,24 @@
+{
+  "user": {
+    "id": 1,
+    "profile": {
+      "name": "Bob",
+      "address": {
+        "street": "123 Main St",
+        "city": "Springfield",
+        "country": {
+          "code": "US",
+          "name": "United States"
+        }
+      }
+    },
+    "settings": {
+      "theme": "dark",
+      "notifications": {
+        "email": true,
+        "sms": false,
+        "push": true
+      }
+    }
+  }
+}
