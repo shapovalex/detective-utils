@@ -1,62 +1,22 @@
 import json
-import re
 import sys
 
-
-def parse_path(path):
-    """Parse a JSONPath string into a list of keys/indices.
-
-    Supports:
-      $.foo.bar        -> ["foo", "bar"]
-      $.foo[0].bar     -> ["foo", 0, "bar"]
-      $["key with spaces"]["deep value"] -> ["key with spaces", "deep value"]
-    """
-    if not path.startswith("$"):
-        raise ValueError("Path must start with '$'")
-
-    tokens = []
-    # Strip the leading '$' and tokenize the rest
-    rest = path[1:]
-
-    token_re = re.compile(
-        r'\["([^"]+)"\]'   # ["key with spaces"]
-        r'|\.([^.\[]+)'    # .key
-        r'|\[(\d+)\]'      # [0]
-    )
-
-    pos = 0
-    while pos < len(rest):
-        m = token_re.match(rest, pos)
-        if not m:
-            raise ValueError(f"Invalid path segment at position {pos + 1}: ...{rest[pos:]!r}")
-        bracket_key, dot_key, index = m.groups()
-        if bracket_key is not None:
-            tokens.append(bracket_key)
-        elif dot_key is not None:
-            tokens.append(dot_key)
-        else:
-            tokens.append(int(index))
-        pos = m.end()
-
-    return tokens
+from jsonpath_ng import parse as jsonpath_parse
+from jsonpath_ng.exceptions import JsonPathParserError
 
 
-def resolve_path(data, tokens):
-    current = data
-    for token in tokens:
-        if isinstance(token, int):
-            if not isinstance(current, list):
-                raise TypeError(f"Expected list for index [{token}], got {type(current).__name__}")
-            if token >= len(current) or token < -len(current):
-                raise IndexError(f"Index [{token}] out of range (length {len(current)})")
-            current = current[token]
-        else:
-            if not isinstance(current, dict):
-                raise TypeError(f"Expected object for key {token!r}, got {type(current).__name__}")
-            if token not in current:
-                raise KeyError(f"Key {token!r} not found")
-            current = current[token]
-    return current
+def extract(data, path):
+    try:
+        expr = jsonpath_parse(path)
+    except JsonPathParserError as e:
+        raise ValueError(str(e)) from e
+
+    matches = expr.find(data)
+    if not matches:
+        raise KeyError(f"No match for path: {path!r}")
+
+    values = [m.value for m in matches]
+    return values[0] if len(values) == 1 else values
 
 
 def load_json(source):
@@ -99,15 +59,9 @@ def main():
         sys.exit(1)
 
     try:
-        tokens = parse_path(json_path)
-    except ValueError as e:
-        print(f"Invalid path: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    try:
-        result = resolve_path(data, tokens)
-    except (KeyError, IndexError, TypeError) as e:
-        print(f"Path error: {e}", file=sys.stderr)
+        result = extract(data, json_path)
+    except (ValueError, KeyError) as e:
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
     print(json.dumps(result, indent=2))
